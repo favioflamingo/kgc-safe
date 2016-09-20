@@ -2,5 +2,5 @@ Changes
 Makefile.PL
 MANIFEST
 README
-t/Kgc-SafeCompartment.t
-lib/Kgc/SafeCompartment.pm
+t/Kgc-Safe.t
+lib/Kgc/Safe.pm

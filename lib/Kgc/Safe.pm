@@ -1,4 +1,4 @@
-package Kgc::SafeCompartment;
+package Kgc::Safe;
 
 use 5.020002;
 use strict;
