@@ -25,7 +25,7 @@ while(<DATA>){
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $compartment = new Safe;
+my $compartment = Safe->new();
 
 # extremely limit what can be run
 $compartment->permit_only(qw(:default));
@@ -40,7 +40,7 @@ my $dispatch_constructor = {
 
 
 my $dispatch_methods = {
-	'export_xprv' =>  \&CBitcoin::CBHD::export_xprv
+	'export_xprv' =>  sub {return CBitcoin::CBHD::export_xprv(@_);}
 };
 
 
@@ -69,15 +69,16 @@ sub base {
 }
 
 
-
 sub generate{
+	require CBitcoin::CBHD;
 	
 	my $x = CBitcoin::CBHD->generate();
-
+	
+	
 	return sub{
 		my $subname = shift;
 		
-		my $class_name = 'CBitcoin::CBHD';
+		
 		my $obj = $x;
 		#my $dc = $dispatch_constructor;
 		my $dm = $dispatch_methods;
@@ -92,27 +93,11 @@ sub generate{
 	};
 }
 
-my $var1 = 1;
 
-sub increment{
-	my $v2 = \$var1;
-	my $buf;
-	
-	my $x = CBitcoin::CBHD->generate();
-	
-	$x->export_xprv();
-	
-	open(my $fh,'<','/dev/urandom');
-	sysread($fh,$buf,4);
-	close($fh);
-	$$v2 += unpack('l',$buf);
-	return $$v2;
-}
-
-$compartment->share('&increment');
+$compartment->share('&generate');
 
 
-my $result = $compartment->reval($unsafe_code) || '';
+my $result = $compartment->reval($unsafe_code) || die "Error: $@";
 #warn "X=".CBitcoin::CBHD->generate()->export_xprv()."\n";
 warn "Result=$result\n";
 
@@ -124,8 +109,6 @@ ok(1, 'nothing');
 
 __DATA__
 
-increment();
+my $x = generate();
 
-increment();
-
-return increment();
+return "hi";
