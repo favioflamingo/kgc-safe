@@ -7,9 +7,8 @@
 
 use strict;
 use warnings;
-use Safe;
-use Safe::Hole;
 
+use CBitcoin;
 
 use Test::More tests => 2;
 BEGIN { use_ok('Kgc::Safe') };
@@ -27,92 +26,33 @@ while(<DATA>){
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $compartment = Safe->new();
-my $hole = Safe::Hole->new({});
+my $compartment = Kgc::Safe->new();
 
 
-########################
-
-# allow CBHD stuff
-my $dispatch_constructor = {
-	'deriveChild' => \&CBitcoin::CBHD::deriveChild
-};
-
-
-my $dispatch_methods = {
-	'export_xprv' =>  sub {return CBitcoin::CBHD::export_xprv(@_);}
-};
-
-
-sub base {
-	my $x = shift;
-	
-	warn "P1:$x";
-	
-	return sub{
-		my $subname = shift;
-		
-		my $class_name = 'CBitcoin::CBHD';
-		my $obj = $x;
-		#my $dc = $dispatch_constructor;
-		my $dm = $dispatch_methods;
-		
-		warn "Obj:".ref($obj);
-			
-		if(defined $obj && defined $dm->{$subname}){
-			return $dm->{$subname}->($obj,@_);
-		}
-		else{
-			return undef;
-		}
-	};	
-}
+$compartment->class_add(
+	'CBitcoin::CBHD',{
+		'generate' => \&CBitcoin::CBHD::generate
+		,'new' => \&CBitcoin::CBHD::new
+		,'export_xprv' => \&CBitcoin::CBHD::export_xprv
+		,'export_xpub' => \&CBitcoin::CBHD::export_xpub
+		,'deriveChildPubExt' => \&CBitcoin::CBHD::deriveChildPubExt
+		,'deriveChild' => \&CBitcoin::CBHD::deriveChild
+	}
+);
 
 
-sub generator {
-	use CBitcoin;
-	use CBitcoin::CBHD;
-	my $x = CBitcoin::CBHD->generate();
-	
-	return sub{
-		my $subname = shift;
-		
-		
-		my $obj = $x;
-		#my $dc = $dispatch_constructor;
-		my $dm = $dispatch_methods;
-			
-		if(defined $obj && defined $dm->{$subname}){
-			
-			return $dm->{$subname}->($obj,@_);
-		}
-		else{
-			return 0;
-		}
-	};
-};
 
 
-$hole->wrap(\&generator, $compartment, '&generator');
-
-#$compartment->share('&generator');
-
-# extremely limit what can be run
-#$compartment->permit_only(qw(:default));
-
-
-my $result = $compartment->reval($unsafe_code) || die "Error: $@";
-#warn "X=".CBitcoin::CBHD->generate()->export_xprv()."\n";
-warn "Result=$result\n";
-
-
-ok(1, 'nothing');
+ok($compartment->reval($unsafe_code) eq 'xpub68sS2KgURMqihLe6XqgH7AMGqWdcf36XP2zmsN1ibz1mfoxwby9QHGai4T1ESVEqPBLwn2csnNNq4jxR6c6NMxkKqJgzs5ZVcdcmZaUNFBo'
+, 'xpub matches');
 
 
 
 
 __DATA__
 
-my $x = generator();
+my $x = new('CBitcoin::CBHD','new','xprv9s21ZrQH143K2mvmD7gyX7eaki1Z2xDLm1mv2acauXyXT9Jt5RbxaJY2pijhEomfmuMbQV78Lq6n6ephw8SToQBKhozVprCAuY8CBsGeBmF');
 
-return $x->('export_xprv');
+my $y = $x->('deriveChildPubExt',32);
+
+return $y->('export_xpub');
