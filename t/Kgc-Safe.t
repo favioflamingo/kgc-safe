@@ -8,7 +8,9 @@
 use strict;
 use warnings;
 use Safe;
-use CBitcoin::CBHD;
+use Safe::Hole;
+
+
 use Test::More tests => 2;
 BEGIN { use_ok('Kgc::Safe') };
 
@@ -26,9 +28,7 @@ while(<DATA>){
 # its man page ( perldoc Test::More ) for help writing this test script.
 
 my $compartment = Safe->new();
-
-# extremely limit what can be run
-$compartment->permit_only(qw(:default));
+my $hole = Safe::Hole->new({});
 
 
 ########################
@@ -69,11 +69,10 @@ sub base {
 }
 
 
-sub generate{
-	require CBitcoin::CBHD;
-	
+sub generator {
+	use CBitcoin;
+	use CBitcoin::CBHD;
 	my $x = CBitcoin::CBHD->generate();
-	
 	
 	return sub{
 		my $subname = shift;
@@ -91,10 +90,15 @@ sub generate{
 			return 0;
 		}
 	};
-}
+};
 
 
-$compartment->share('&generate');
+$hole->wrap(\&generator, $compartment, '&generator');
+
+#$compartment->share('&generator');
+
+# extremely limit what can be run
+#$compartment->permit_only(qw(:default));
 
 
 my $result = $compartment->reval($unsafe_code) || die "Error: $@";
@@ -109,6 +113,6 @@ ok(1, 'nothing');
 
 __DATA__
 
-my $x = generate();
+my $x = generator();
 
-return "hi";
+return $x->('export_xprv');

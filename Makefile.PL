@@ -5,8 +5,10 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'Kgc::Safe',
     VERSION_FROM      => 'lib/Kgc/Safe.pm', # finds $VERSION, requires EU::MM from perl >= 5.5
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
-    ABSTRACT_FROM     => 'lib/Kgc/Safe.pm', # retrieve abstract from module
+    PREREQ_PM         => {
+    	'Safe::Hole' => 0 # libsafe-hoel-perl
+    }, # e.g., Module::Name => 1.1
+    #ABSTRACT_FROM     => 'lib/Kgc/Safe.pm', # retrieve abstract from module
     AUTHOR            => 'Joel DeJesus (Work Email) <dejesus.joel@e-flamingo.jp>',
     #LICENSE           => 'perl',
     #Value must be from legacy list of licenses here
