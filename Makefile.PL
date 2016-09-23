@@ -3,14 +3,15 @@ use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 WriteMakefile(
-    NAME              => 'Kgc::Safe',
-    VERSION_FROM      => 'lib/Kgc/Safe.pm', # finds $VERSION, requires EU::MM from perl >= 5.5
+    NAME              => 'Safe::Compartment',
+    VERSION_FROM      => 'lib/Safe/Compartment.pm', # finds $VERSION, requires EU::MM from perl >= 5.5
     PREREQ_PM         => {
-    	'Safe::Hole' => 0 # libsafe-hoel-perl
+    	'Safe' => 0
+    	,'Safe::Hole' => 0 # libsafe-hole-perl
     }, # e.g., Module::Name => 1.1
     #ABSTRACT_FROM     => 'lib/Kgc/Safe.pm', # retrieve abstract from module
     AUTHOR            => 'Joel DeJesus (Work Email) <dejesus.joel@e-flamingo.jp>',
-    #LICENSE           => 'perl',
+    LICENSE           => 'perl',
     #Value must be from legacy list of licenses here
     #http://search.cpan.org/perldoc?Module%3A%3ABuild%3A%3AAPI
 );

@@ -1,4 +1,4 @@
-# This Makefile is for the Kgc::Safe extension to perl.
+# This Makefile is for the Safe::Compartment extension to perl.
 #
 # It was generated automatically by MakeMaker version
 # 7.04 (Revision: 70400) from the contents of
@@ -14,10 +14,11 @@
 #     AUTHOR => [q[Joel DeJesus (Work Email) <dejesus.joel@e-flamingo.jp>]]
 #     BUILD_REQUIRES => {  }
 #     CONFIGURE_REQUIRES => {  }
-#     NAME => q[Kgc::Safe]
-#     PREREQ_PM => { Safe::Hole=>q[0] }
+#     LICENSE => q[perl]
+#     NAME => q[Safe::Compartment]
+#     PREREQ_PM => { Safe=>q[0], Safe::Hole=>q[0] }
 #     TEST_REQUIRES => {  }
-#     VERSION_FROM => q[lib/Kgc/Safe.pm]
+#     VERSION_FROM => q[lib/Safe/Compartment.pm]
 
 # --- MakeMaker post_initialize section:
 
@@ -54,8 +55,8 @@ VENDORLIBEXP = /usr/share/perl5
 AR_STATIC_ARGS = cr
 DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
-NAME = Kgc::Safe
-NAME_SYM = Kgc_Safe
+NAME = Safe::Compartment
+NAME_SYM = Safe_Compartment
 VERSION = 0.1
 VERSION_MACRO = VERSION
 VERSION_SYM = 0_1
@@ -144,11 +145,11 @@ MM_REVISION = 70400
 # PARENT_NAME = NAME without BASEEXT and no trailing :: (eg Foo::Bar)
 # DLBASE  = Basename part of dynamic library. May be just equal BASEEXT.
 MAKE = make
-FULLEXT = Kgc/Safe
-BASEEXT = Safe
-PARENT_NAME = Kgc
+FULLEXT = Safe/Compartment
+BASEEXT = Compartment
+PARENT_NAME = Safe
 DLBASE = $(BASEEXT)
-VERSION_FROM = lib/Kgc/Safe.pm
+VERSION_FROM = lib/Safe/Compartment.pm
 OBJECT = 
 LDFROM = $(OBJECT)
 LINKTYPE = dynamic
@@ -160,14 +161,14 @@ C_FILES  =
 O_FILES  = 
 H_FILES  = 
 MAN1PODS = 
-MAN3PODS = lib/Kgc/Safe.pm
+MAN3PODS = lib/Safe/Compartment.pm
 
 # Where is the Config information that we are using/depend on
 CONFIGDEP = $(PERL_ARCHLIBDEP)$(DFSEP)Config.pm $(PERL_INCDEP)$(DFSEP)config.h
 
 # Where to build things
-INST_LIBDIR      = $(INST_LIB)/Kgc
-INST_ARCHLIBDIR  = $(INST_ARCHLIB)/Kgc
+INST_LIBDIR      = $(INST_LIB)/Safe
+INST_ARCHLIBDIR  = $(INST_ARCHLIB)/Safe
 
 INST_AUTODIR     = $(INST_LIB)/auto/$(FULLEXT)
 INST_ARCHAUTODIR = $(INST_ARCHLIB)/auto/$(FULLEXT)
@@ -183,10 +184,10 @@ PERL_ARCHIVEDEP    =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Kgc/Safe.pm
+TO_INST_PM = lib/Safe/Compartment.pm
 
-PM_TO_BLIB = lib/Kgc/Safe.pm \
-	blib/lib/Kgc/Safe.pm
+PM_TO_BLIB = lib/Safe/Compartment.pm \
+	blib/lib/Safe/Compartment.pm
 
 
 # --- MakeMaker platform_constants section:
@@ -255,8 +256,8 @@ CI = ci -u
 RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
-DISTNAME = Kgc-Safe
-DISTVNAME = Kgc-Safe-0.1
+DISTNAME = Safe-Compartment
+DISTVNAME = Safe-Compartment-0.1
 
 
 # --- MakeMaker macro section:
@@ -410,9 +411,9 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	lib/Kgc/Safe.pm
+	lib/Safe/Compartment.pm
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) -u \
-	  lib/Kgc/Safe.pm $(INST_MAN3DIR)/Kgc::Safe.$(MAN3EXT) 
+	  lib/Safe/Compartment.pm $(INST_MAN3DIR)/Safe::Compartment.$(MAN3EXT) 
 
 
 
@@ -470,7 +471,7 @@ realclean_subdirs :
 # Delete temporary files (via clean) and also delete dist files
 realclean purge ::  clean realclean_subdirs
 	- $(RM_F) \
-	  $(FIRST_MAKEFILE) $(MAKEFILE_OLD) 
+	  $(MAKEFILE_OLD) $(FIRST_MAKEFILE) 
 	- $(RM_RF) \
 	  $(DISTVNAME) 
 
@@ -488,16 +489,17 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '  ExtUtils::MakeMaker: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'dynamic_config: 1' >> META_new.yml
 	$(NOECHO) $(ECHO) 'generated_by: '\''ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.142690'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'license: unknown' >> META_new.yml
+	$(NOECHO) $(ECHO) 'license: perl' >> META_new.yml
 	$(NOECHO) $(ECHO) 'meta-spec:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  url: http://module-build.sourceforge.net/META-spec-v1.4.html' >> META_new.yml
 	$(NOECHO) $(ECHO) '  version: '\''1.4'\''' >> META_new.yml
-	$(NOECHO) $(ECHO) 'name: Kgc-Safe' >> META_new.yml
+	$(NOECHO) $(ECHO) 'name: Safe-Compartment' >> META_new.yml
 	$(NOECHO) $(ECHO) 'no_index:' >> META_new.yml
 	$(NOECHO) $(ECHO) '  directory:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - t' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - inc' >> META_new.yml
 	$(NOECHO) $(ECHO) 'requires:' >> META_new.yml
+	$(NOECHO) $(ECHO) '  Safe: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) '  Safe::Hole: '\''0'\''' >> META_new.yml
 	$(NOECHO) $(ECHO) 'version: '\''0.1'\''' >> META_new.yml
 	-$(NOECHO) $(MV) META_new.yml $(DISTVNAME)/META.yml
@@ -510,13 +512,13 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '   "dynamic_config" : 1,' >> META_new.json
 	$(NOECHO) $(ECHO) '   "generated_by" : "ExtUtils::MakeMaker version 7.04, CPAN::Meta::Converter version 2.142690",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "license" : [' >> META_new.json
-	$(NOECHO) $(ECHO) '      "unknown"' >> META_new.json
+	$(NOECHO) $(ECHO) '      "perl_5"' >> META_new.json
 	$(NOECHO) $(ECHO) '   ],' >> META_new.json
 	$(NOECHO) $(ECHO) '   "meta-spec" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",' >> META_new.json
 	$(NOECHO) $(ECHO) '      "version" : "2"' >> META_new.json
 	$(NOECHO) $(ECHO) '   },' >> META_new.json
-	$(NOECHO) $(ECHO) '   "name" : "Kgc-Safe",' >> META_new.json
+	$(NOECHO) $(ECHO) '   "name" : "Safe-Compartment",' >> META_new.json
 	$(NOECHO) $(ECHO) '   "no_index" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '      "directory" : [' >> META_new.json
 	$(NOECHO) $(ECHO) '         "t",' >> META_new.json
@@ -536,6 +538,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '      },' >> META_new.json
 	$(NOECHO) $(ECHO) '      "runtime" : {' >> META_new.json
 	$(NOECHO) $(ECHO) '         "requires" : {' >> META_new.json
+	$(NOECHO) $(ECHO) '            "Safe" : "0",' >> META_new.json
 	$(NOECHO) $(ECHO) '            "Safe::Hole" : "0"' >> META_new.json
 	$(NOECHO) $(ECHO) '         }' >> META_new.json
 	$(NOECHO) $(ECHO) '      }' >> META_new.json
@@ -846,6 +849,7 @@ ppd :
 	$(NOECHO) $(ECHO) '    <ABSTRACT></ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Joel DeJesus (Work Email) &lt;dejesus.joel@e-flamingo.jp&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Safe::" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Safe::Hole" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="x86_64-linux-gnu-thread-multi-5.20" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
@@ -857,7 +861,7 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
-	  lib/Kgc/Safe.pm blib/lib/Kgc/Safe.pm 
+	  lib/Safe/Compartment.pm blib/lib/Safe/Compartment.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
 

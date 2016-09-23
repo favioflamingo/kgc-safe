@@ -1,4 +1,4 @@
-package Kgc::Safe;
+package Safe::Compartment;
 
 #use 5.020002;
 use strict;
@@ -46,6 +46,7 @@ sub new {
 		'classes' => {}
 		,'safe' => Safe->new('Root')
 		,'hole' => Safe::Hole->new({})
+		,'subs' => {}
 	};
 	
 	bless($this,$package);
@@ -152,13 +153,45 @@ sub dispatch{
 	#my $xo = Data::Dumper::Dumper($class);
 	#warn "dispatch 2($class_name,$sub_name)\n";
 	
-	return undef unless defined $sub_name && defined $class->{'dispatch'}->{$sub_name};
+	
+	unless(defined $sub_name && defined $class->{'dispatch'}->{$sub_name}){
+		# when no arguments are specified, return the ref()
+		return $class_name;
+	}
+	
+	
 	
 	#my $new_bool = 0;
 	#$new_bool = 1 if $class->{'constructors'}->{$sub_name};
-	my $y = shift;
+	
 	#warn "dispatch 3:(".ref($class->{'dispatch'}->{$sub_name})."|".ref($y).")\n" if ref($y) eq 'CBitcoin::CBHD';
-	my $ans = $class->{'dispatch'}->{$sub_name}->($y,@_);
+
+	# change args to objects
+	my @args;
+	while(my $a = shift(@_)){
+		unless(ref($a) eq 'CODE'){
+			push(@args,$a);
+			next;
+		}
+		
+		my $refname = $a->();
+		
+		unless(defined $refname && 0 < length($refname)){
+			push(@args,$a);
+			next;
+		}
+		
+		# search and replace sub reference with the actual object
+		if(defined $this->{'subs'}->{$a}){
+			push(@args,$this->{'subs'}->{$a});
+		}
+		else{
+			push(@args,$a);
+		}
+	}
+	
+	
+	my $ans = $class->{'dispatch'}->{$sub_name}->(@args);
 	#warn "dispatch: ans=$ans\n";
 	
 	unless(defined $ans){
@@ -201,13 +234,17 @@ sub constructor{
 	my $module_name = ref($obj);
 	return undef unless defined $this->{'classes'}->{$module_name};
 	#warn "contructor 3\n";
-	return sub{
+	my $subvar = sub{
 		my $obj_in = $obj;
 		my $this_in = $this;
 		my $sub_name = shift;
 	
 		return $this_in->dispatch(ref($obj_in),$sub_name,$obj_in,@_);	
 	};
+	# remember the object associated with the code
+	$this->{'subs'}->{$subvar} = $obj;
+	
+	return $subvar;
 }
 
 =pod
@@ -216,6 +253,8 @@ sub constructor{
 
 Let \&new be the official contructor inside the compartment.  To create a new object, just do:<verbatim>
 my $obj = new('CBitcoin::CBHD','generate');
+
+and $obj->() returns the name of the object.
 
 =cut
 
@@ -250,10 +289,19 @@ sub initialize_compartment{
 			return $t1->dispatch($class_name,$sub_name,$class_name,@_);
 		}
 		, $this->safe
-		, '&new'
+		, '&create'
 	);
 	
-	
+	$this->hole->wrap(
+		sub{
+			my $this_in = $this;
+			my $subvar = shift;
+			return undef unless defined $subvar && ref($subvar) eq 'CODE' && defined $this_in->{'subs'}->{$subvar};
+			delete $this_in->{'subs'}->{$subvar};
+		}
+		,$this->safe
+		,'&destroy'
+	);
 }
 
 =pod

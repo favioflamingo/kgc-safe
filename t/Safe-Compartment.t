@@ -11,7 +11,7 @@ use warnings;
 use CBitcoin;
 
 use Test::More tests => 2;
-BEGIN { use_ok('Kgc::Safe') };
+BEGIN { use_ok('Safe::Compartment') };
 
 
 ############ load in the unsafe code ##########
@@ -26,7 +26,7 @@ while(<DATA>){
 # Insert your test code below, the Test::More module is use()ed here so read
 # its man page ( perldoc Test::More ) for help writing this test script.
 
-my $compartment = Kgc::Safe->new();
+my $compartment = Safe::Compartment->new();
 
 
 $compartment->class_add(
@@ -43,7 +43,7 @@ $compartment->class_add(
 
 
 
-ok($compartment->reval($unsafe_code) eq 'xpub68sS2KgURMqihLe6XqgH7AMGqWdcf36XP2zmsN1ibz1mfoxwby9QHGai4T1ESVEqPBLwn2csnNNq4jxR6c6NMxkKqJgzs5ZVcdcmZaUNFBo'
+ok($compartment->reval($unsafe_code) eq 'CBitcoin::CBHD'."\n".'xpub68sS2KgURMqihLe6XqgH7AMGqWdcf36XP2zmsN1ibz1mfoxwby9QHGai4T1ESVEqPBLwn2csnNNq4jxR6c6NMxkKqJgzs5ZVcdcmZaUNFBo'
 , 'xpub matches');
 
 
@@ -51,8 +51,10 @@ ok($compartment->reval($unsafe_code) eq 'xpub68sS2KgURMqihLe6XqgH7AMGqWdcf36XP2z
 
 __DATA__
 
-my $x = new('CBitcoin::CBHD','new','xprv9s21ZrQH143K2mvmD7gyX7eaki1Z2xDLm1mv2acauXyXT9Jt5RbxaJY2pijhEomfmuMbQV78Lq6n6ephw8SToQBKhozVprCAuY8CBsGeBmF');
+my $x = create('CBitcoin::CBHD','new','xprv9s21ZrQH143K2mvmD7gyX7eaki1Z2xDLm1mv2acauXyXT9Jt5RbxaJY2pijhEomfmuMbQV78Lq6n6ephw8SToQBKhozVprCAuY8CBsGeBmF');
 
 my $y = $x->('deriveChildPubExt',32);
 
-return $y->('export_xpub');
+destroy($x);
+
+return $y->()."\n".$y->('export_xpub');
